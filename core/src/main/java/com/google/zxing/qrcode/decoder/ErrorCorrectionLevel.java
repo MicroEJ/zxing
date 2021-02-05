@@ -56,5 +56,13 @@ public enum ErrorCorrectionLevel {
     return FOR_BITS[bits];
   }
 
-
+  //MICROEJ COMPLIANCE
+  public static ErrorCorrectionLevel myValueOf(String name) {
+	    for (ErrorCorrectionLevel e : values()) {
+	        if (e.name().equals(name)) {
+	            return e;
+	        }
+	    }
+	    return null;
+	}
 }

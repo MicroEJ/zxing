@@ -87,53 +87,6 @@ public final class BitArray implements Cloneable {
   }
 
   /**
-   * @param from first bit to check
-   * @return index of first bit that is set, starting from the given index, or size if none are set
-   *  at or beyond this given index
-   * @see #getNextUnset(int)
-   */
-  public int getNextSet(int from) {
-    if (from >= size) {
-      return size;
-    }
-    int bitsOffset = from / 32;
-    int currentBits = bits[bitsOffset];
-    // mask off lesser bits first
-    currentBits &= ~((1 << (from & 0x1F)) - 1);
-    while (currentBits == 0) {
-      if (++bitsOffset == bits.length) {
-        return size;
-      }
-      currentBits = bits[bitsOffset];
-    }
-    int result = (bitsOffset * 32) + Integer.numberOfTrailingZeros(currentBits);
-    return result > size ? size : result;
-  }
-
-  /**
-   * @param from index to start looking for unset bit
-   * @return index of next unset bit, or {@code size} if none are unset until the end
-   * @see #getNextSet(int)
-   */
-  public int getNextUnset(int from) {
-    if (from >= size) {
-      return size;
-    }
-    int bitsOffset = from / 32;
-    int currentBits = ~bits[bitsOffset];
-    // mask off lesser bits first
-    currentBits &= ~((1 << (from & 0x1F)) - 1);
-    while (currentBits == 0) {
-      if (++bitsOffset == bits.length) {
-        return size;
-      }
-      currentBits = ~bits[bitsOffset];
-    }
-    int result = (bitsOffset * 32) + Integer.numberOfTrailingZeros(currentBits);
-    return result > size ? size : result;
-  }
-
-  /**
    * Sets a block of 32 bits, starting at bit i.
    *
    * @param i first bit to set
@@ -307,7 +260,7 @@ public final class BitArray implements Cloneable {
   public void reverse() {
     int[] newBits = new int[bits.length];
     // reverse all int's first
-    int len = (size - 1) / 32;
+    int len = ((size-1) / 32);
     int oldBitsLen = len + 1;
     for (int i = 0; i < oldBitsLen; i++) {
       long x = (long) bits[i];
